@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Web2AddressbookTests
+namespace WebAddressbookTests
 {
-    class ContactData
+    public class ContactData
     {
         private string firstname;
         private string lastname;
