@@ -14,16 +14,58 @@ namespace WebAddressbookTests
     {
         private bool acceptNextAlert = true;
 
-        public ContactHelper(IWebDriver driver) : base(driver)
+        public ContactHelper(ApplicationManager manager) : base(manager)
         {
         }
 
-        public void SubmitNewContract()
+        public ContactHelper ConCreate(ContactData contact)
+        {
+            InitNewContact();
+            FillContractForm(contact);
+            SubmitNewContract();
+            return this;
+        }
+
+        public ContactHelper ConModify(int index, ContactData newContact)
+        {
+            GoToContactPage();
+            SelectContact(index);
+            EditNewContract(1);
+            FillContractForm(newContact);
+            SubmitNewContractModify();
+            return this;
+        }
+
+
+        public ContactHelper EditNewContract(int index)
+        {
+            driver.FindElement(By.XPath("(//img[@title='Edit'])[" + index + "]")).Click();
+            return this;
+        }
+
+        public ContactHelper ConRemove(int index)
+        {
+            GoToContactPage();
+            SelectContact(index);
+            RemoveContact();
+            return this;
+        }
+
+
+        public ContactHelper SubmitNewContractModify()
+        {
+            driver.FindElement(By.Name("update")).Click();
+            return this;
+        }
+
+
+        public ContactHelper SubmitNewContract()
         {
             driver.FindElement(By.Name("submit")).Click();
+            return this;
         }
 
-        public void FillContractForm(ContactData contact)
+        public ContactHelper FillContractForm(ContactData contact)
         {
             driver.FindElement(By.Name("firstname")).Clear();
             driver.FindElement(By.Name("firstname")).SendKeys(contact.Firstname);
@@ -69,27 +111,32 @@ namespace WebAddressbookTests
             driver.FindElement(By.Name("phone2")).SendKeys("Yes");
             driver.FindElement(By.Name("notes")).Clear();
             driver.FindElement(By.Name("notes")).SendKeys("Yes");
+            return this;
         }
 
-        public void GoToContactPage()
+        public ContactHelper GoToContactPage()
         {
             driver.FindElement(By.LinkText("home")).Click();
+            return this;
         }
 
-        public void SelectContact(int index)
+        public ContactHelper SelectContact(int index)
         {
             driver.FindElement(By.XPath("(//input[@name='selected[]'])[" + index + "]")).Click();
+            return this;
         }
 
-        public void InitNewContact()
+        public ContactHelper InitNewContact()
         {
             driver.FindElement(By.LinkText("add new")).Click();
+            return this;
         }
 
-        public void RemoveContact()
+        public ContactHelper RemoveContact()
         {
             driver.FindElement(By.XPath("//input[@value='Delete']")).Click();
             Assert.IsTrue(Regex.IsMatch(CloseAlertAndGetItsText(), "^Delete 1 addresses[\\s\\S]$"));
+            return this;
         }
 
         private string CloseAlertAndGetItsText()
