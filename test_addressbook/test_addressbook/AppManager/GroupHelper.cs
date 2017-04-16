@@ -31,15 +31,7 @@ namespace WebAddressbookTests
         {
             manager.Navigator.GoToGroupPage();
 
-            if (IsGroupIn() != true)
-            {
-                GroupData forModify = new GroupData("group3");
-                forModify.Header = "group3";
-                forModify.Footer = "group3";
-
-                manager.Groups.Create(forModify);
-            }
-
+            ChekingGroup();
             SelectGroup(index);
             InitGroupModification();
             FillGroupForm(newData);
@@ -52,14 +44,7 @@ namespace WebAddressbookTests
         {
             manager.Navigator.GoToGroupPage();
 
-            if (IsGroupIn() != true)
-            {
-                GroupData forModify = new GroupData("group3");
-                forModify.Header = "group3";
-                forModify.Footer = "group3";
-
-                manager.Groups.Create(forModify);
-            }
+            ChekingGroup();
             SelectGroup(index);
             RemoveGroup();
             ReturnToGroupPage();
@@ -115,6 +100,18 @@ namespace WebAddressbookTests
         {
             driver.FindElement(By.LinkText("group page")).Click();
             return this;
+        }
+
+        public void ChekingGroup()
+        {
+            if (IsGroupIn() != true)
+            {
+                GroupData forModify = new GroupData("group3");
+                forModify.Header = "group3";
+                forModify.Footer = "group3";
+
+                manager.Groups.Create(forModify);
+            }
         }
 
         public bool IsGroupIn()

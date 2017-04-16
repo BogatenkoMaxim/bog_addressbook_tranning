@@ -33,12 +33,7 @@ namespace WebAddressbookTests
         {
             manager.Navigator.GoToHomePage();
 
-            if (IsContractIn() != true)
-            {
-                ContactData forModify = new ContactData("Maxim", "Bogatenko");
-                manager.Contacts.ConCreate(forModify);
-            }
-
+            ChekingContract();
             SelectContact(index);
             EditNewContract(1);
             FillContractForm(newContact);
@@ -51,12 +46,7 @@ namespace WebAddressbookTests
         {
             manager.Navigator.GoToHomePage();
 
-            if (IsContractIn() != true)
-            {
-                ContactData forModify = new ContactData("Maxim", "Bogatenko");
-                manager.Contacts.ConCreate(forModify);
-            }
-
+            ChekingContract();
             SelectContact(index);
             RemoveContact();
             ReturnToHomePage();
@@ -133,6 +123,15 @@ namespace WebAddressbookTests
         public void ReturnToHomePage()
         {
             driver.FindElement(By.LinkText("home")).Click();
+        }
+
+        public void ChekingContract()
+        {
+            if (IsContractIn() != true)
+            {
+                ContactData forModify = new ContactData("Maxim", "Bogatenko");
+                manager.Contacts.ConCreate(forModify);
+            }
         }
 
         private bool IsContractIn()
