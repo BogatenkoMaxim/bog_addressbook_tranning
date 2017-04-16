@@ -20,37 +20,54 @@ namespace WebAddressbookTests
 
         public ContactHelper ConCreate(ContactData contact)
         {
+            manager.Navigator.GoToHomePage();
+
             InitNewContact();
             FillContractForm(contact);
             SubmitNewContract();
+            ReturnToHomePage();
             return this;
         }
 
         public ContactHelper ConModify(int index, ContactData newContact)
         {
-            GoToContactPage();
+            manager.Navigator.GoToHomePage();
+
+            if (IsContractIn() != true)
+            {
+                ContactData forModify = new ContactData("Maxim", "Bogatenko");
+                manager.Contacts.ConCreate(forModify);
+            }
+
             SelectContact(index);
             EditNewContract(1);
             FillContractForm(newContact);
             SubmitNewContractModify();
+            ReturnToHomePage();
             return this;
         }
 
+        public ContactHelper ConRemove(int index)
+        {
+            manager.Navigator.GoToHomePage();
+
+            if (IsContractIn() != true)
+            {
+                ContactData forModify = new ContactData("Maxim", "Bogatenko");
+                manager.Contacts.ConCreate(forModify);
+            }
+
+            SelectContact(index);
+            RemoveContact();
+            ReturnToHomePage();
+            return this;
+        }
 
         public ContactHelper EditNewContract(int index)
         {
             driver.FindElement(By.XPath("(//img[@title='Edit'])[" + index + "]")).Click();
             return this;
         }
-
-        public ContactHelper ConRemove(int index)
-        {
-            GoToContactPage();
-            SelectContact(index);
-            RemoveContact();
-            return this;
-        }
-
 
         public ContactHelper SubmitNewContractModify()
         {
@@ -67,56 +84,30 @@ namespace WebAddressbookTests
 
         public ContactHelper FillContractForm(ContactData contact)
         {
-            driver.FindElement(By.Name("firstname")).Clear();
-            driver.FindElement(By.Name("firstname")).SendKeys(contact.Firstname);
-            driver.FindElement(By.Name("middlename")).Clear();
-            driver.FindElement(By.Name("middlename")).SendKeys("Nikolaevich");
-            driver.FindElement(By.Name("lastname")).Clear();
-            driver.FindElement(By.Name("lastname")).SendKeys(contact.LastName);
-            driver.FindElement(By.Name("nickname")).Clear();
-            driver.FindElement(By.Name("nickname")).SendKeys("MaxBog");
-            driver.FindElement(By.Name("title")).Clear();
-            driver.FindElement(By.Name("title")).SendKeys("Yes");
-            driver.FindElement(By.Name("company")).Clear();
-            driver.FindElement(By.Name("company")).SendKeys("Yes");
-            driver.FindElement(By.Name("address")).Clear();
-            driver.FindElement(By.Name("address")).SendKeys("Yes");
-            driver.FindElement(By.Name("home")).Clear();
-            driver.FindElement(By.Name("home")).SendKeys("Yes");
-            driver.FindElement(By.Name("mobile")).Clear();
-            driver.FindElement(By.Name("mobile")).SendKeys("Yes");
-            driver.FindElement(By.Name("work")).Clear();
-            driver.FindElement(By.Name("work")).SendKeys("Yes");
-            driver.FindElement(By.Name("fax")).Clear();
-            driver.FindElement(By.Name("fax")).SendKeys("Yes");
-            driver.FindElement(By.Name("email")).Clear();
-            driver.FindElement(By.Name("email")).SendKeys("Yes");
-            driver.FindElement(By.Name("email2")).Clear();
-            driver.FindElement(By.Name("email2")).SendKeys("Yes");
-            driver.FindElement(By.Name("email3")).Clear();
-            driver.FindElement(By.Name("email3")).SendKeys("Yes");
-            driver.FindElement(By.Name("homepage")).Clear();
-            driver.FindElement(By.Name("homepage")).SendKeys("Yes");
-            new SelectElement(driver.FindElement(By.Name("bday"))).SelectByText("2");
-            new SelectElement(driver.FindElement(By.Name("bmonth"))).SelectByText("November");
-            driver.FindElement(By.Name("byear")).Clear();
-            driver.FindElement(By.Name("byear")).SendKeys("1992");
-            new SelectElement(driver.FindElement(By.Name("aday"))).SelectByText("2");
-            new SelectElement(driver.FindElement(By.Name("amonth"))).SelectByText("November");
-            driver.FindElement(By.Name("ayear")).Clear();
-            driver.FindElement(By.Name("ayear")).SendKeys("1992");
-            driver.FindElement(By.Name("address2")).Clear();
-            driver.FindElement(By.Name("address2")).SendKeys("Yes");
-            driver.FindElement(By.Name("phone2")).Clear();
-            driver.FindElement(By.Name("phone2")).SendKeys("Yes");
-            driver.FindElement(By.Name("notes")).Clear();
-            driver.FindElement(By.Name("notes")).SendKeys("Yes");
-            return this;
-        }
-
-        public ContactHelper GoToContactPage()
-        {
-            driver.FindElement(By.LinkText("home")).Click();
+            Type(By.Name("firstname"), contact.Firstname);
+            Type(By.Name("middlename"), "Nikolaevich");
+            Type(By.Name("lastname"), contact.LastName);
+            Type(By.Name("nickname"), "MaxBog");
+            Type(By.Name("title"), "Yes");
+            Type(By.Name("company"), "Yes");
+            Type(By.Name("address"), "Yes");
+            Type(By.Name("home"), "Yes");
+            Type(By.Name("mobile"), "Yes");
+            Type(By.Name("work"), "Yes");
+            Type(By.Name("fax"), "Yes");
+            Type(By.Name("email"), "Yes");
+            Type(By.Name("email2"), "Yes");
+            Type(By.Name("email3"), "Yes");
+            Type(By.Name("homepage"), "Yes");
+            TypeCon(By.Name("bday"), "2");
+            TypeCon(By.Name("bmonth"), "November");
+            Type(By.Name("byear"), "1992");
+            TypeCon(By.Name("aday"), "2");
+            TypeCon(By.Name("amonth"), "November");
+            Type(By.Name("ayear"), "1992");
+            Type(By.Name("address2"), "Yes");
+            Type(By.Name("phone2"), "Yes");
+            Type(By.Name("notes"), "Yes");
             return this;
         }
 
@@ -137,6 +128,16 @@ namespace WebAddressbookTests
             driver.FindElement(By.XPath("//input[@value='Delete']")).Click();
             Assert.IsTrue(Regex.IsMatch(CloseAlertAndGetItsText(), "^Delete 1 addresses[\\s\\S]$"));
             return this;
+        }
+
+        public void ReturnToHomePage()
+        {
+            driver.FindElement(By.LinkText("home")).Click();
+        }
+
+        private bool IsContractIn()
+        {
+            return IsElementPresent(By.Name("selected[]"));
         }
 
         private string CloseAlertAndGetItsText()

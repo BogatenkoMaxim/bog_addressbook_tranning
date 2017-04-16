@@ -9,17 +9,16 @@ namespace WebAddressbookTests
 {
     [TestFixture]
 
-    public class GroupModificationTests : TestBase
+    public class GroupModificationTests : AuthTestBase
     {
         [Test]
         public void GroupModificationTest()
         {
             GroupData newData = new GroupData("group2");
-            newData.Header = "group2";
-            newData.Footer = "group2";
+            newData.Header = null;
+            newData.Footer = null;
 
             app.Groups.Modify(1, newData);
-            app.Auth.ReturnToGroupPage();
         }
     }
 }

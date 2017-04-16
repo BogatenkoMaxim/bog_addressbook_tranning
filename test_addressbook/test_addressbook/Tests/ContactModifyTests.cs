@@ -9,7 +9,7 @@ namespace WebAddressbookTests
 {
     [TestFixture]
 
-    public class ContactModifyTests : TestBase
+    public class ContactModifyTests : AuthTestBase
     {
 
         [Test]
@@ -18,7 +18,6 @@ namespace WebAddressbookTests
             ContactData newContact = new ContactData("Maxis", "Bogatenkos");
 
             app.Contacts.ConModify(1, newContact);
-            app.Auth.ReturnAndLogout();
         }
 
     }
