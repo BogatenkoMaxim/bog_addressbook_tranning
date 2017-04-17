@@ -20,6 +20,9 @@ namespace WebAddressbookTests
         public void EmptyContactCreationTest()
         {
             ContactData contact = new ContactData("", "");
+
+            app.Navigator.GoToHomePage();
+
             app.Contacts.ConCreate(contact);
         }
     }

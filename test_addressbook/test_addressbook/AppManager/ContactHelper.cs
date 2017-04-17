@@ -20,8 +20,6 @@ namespace WebAddressbookTests
 
         public ContactHelper ConCreate(ContactData contact)
         {
-            manager.Navigator.GoToHomePage();
-
             InitNewContact();
             FillContractForm(contact);
             SubmitNewContract();
@@ -31,9 +29,6 @@ namespace WebAddressbookTests
 
         public ContactHelper ConModify(int index, ContactData newContact)
         {
-            manager.Navigator.GoToHomePage();
-
-            ChekingContract();
             SelectContact(index);
             EditNewContract(1);
             FillContractForm(newContact);
@@ -44,9 +39,6 @@ namespace WebAddressbookTests
 
         public ContactHelper ConRemove(int index)
         {
-            manager.Navigator.GoToHomePage();
-
-            ChekingContract();
             SelectContact(index);
             RemoveContact();
             ReturnToHomePage();

@@ -17,6 +17,8 @@ namespace WebAddressbookTests
         {
             ContactData newContact = new ContactData("Maxis", "Bogatenkos");
 
+            app.Navigator.GoToHomePage();
+            app.Contacts.ChekingContract();
             app.Contacts.ConModify(1, newContact);
         }
 

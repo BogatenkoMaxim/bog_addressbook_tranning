@@ -18,6 +18,8 @@ namespace WebAddressbookTests
             newData.Header = null;
             newData.Footer = null;
 
+            app.Navigator.GoToGroupPage();
+            app.Groups.ChekingGroup();
             app.Groups.Modify(1, newData);
         }
     }
