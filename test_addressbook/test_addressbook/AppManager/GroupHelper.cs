@@ -16,6 +16,7 @@ namespace WebAddressbookTests
         {
         }
 
+// Выполняемые действия над группами
         public GroupHelper Create(GroupData group)
         {
             InitNewGroup();
@@ -43,6 +44,7 @@ namespace WebAddressbookTests
             return this;
         }
 
+// Методы манипуляции с группами
         public GroupHelper InitNewGroup()
         {
             driver.FindElement(By.Name("new")).Click();
@@ -65,7 +67,7 @@ namespace WebAddressbookTests
 
         public GroupHelper SelectGroup(int index)
         {
-            driver.FindElement(By.XPath("(//input[@name='selected[]'])[" + index + "]")).Click();
+            driver.FindElement(By.XPath("(//input[@name='selected[]'])[" + (index+1) + "]")).Click();
             return this;
         }
 
@@ -94,6 +96,7 @@ namespace WebAddressbookTests
             return this;
         }
 
+// Метода проверки наличия группы в GroupPage
         public void ChekingGroup()
         {
             if (IsGroupIn() != true)
@@ -111,5 +114,18 @@ namespace WebAddressbookTests
             return IsElementPresent(By.Name("selected[]"));
         }
 
+// Методы сравнения групп
+        public List<GroupData> GetGroupList()
+        {
+            List<GroupData> groups = new List<GroupData>();
+
+            manager.Navigator.GoToGroupPage();
+            ICollection<IWebElement> elements = driver.FindElements(By.CssSelector("span.group"));
+            foreach (IWebElement element in elements)
+            {
+                groups.Add(new GroupData(element.Text));
+            }
+            return groups;
+        }
     }
 }

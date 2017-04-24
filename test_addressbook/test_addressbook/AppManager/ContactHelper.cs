@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading;
 using NUnit.Framework;
@@ -14,6 +15,7 @@ namespace WebAddressbookTests
     {
         private bool acceptNextAlert = true;
 
+// Выполняемые действия над контактами
         public ContactHelper(ApplicationManager manager) : base(manager)
         {
         }
@@ -45,6 +47,7 @@ namespace WebAddressbookTests
             return this;
         }
 
+// Методы манипуляции с контактами
         public ContactHelper EditNewContract(int index)
         {
             driver.FindElement(By.XPath("(//img[@title='Edit'])[" + index + "]")).Click();
@@ -95,7 +98,7 @@ namespace WebAddressbookTests
 
         public ContactHelper SelectContact(int index)
         {
-            driver.FindElement(By.XPath("(//input[@name='selected[]'])[" + index + "]")).Click();
+            driver.FindElement(By.XPath("(//input[@name='selected[]'])[" + (index+1) + "]")).Click();
             return this;
         }
 
@@ -117,6 +120,7 @@ namespace WebAddressbookTests
             driver.FindElement(By.LinkText("home")).Click();
         }
 
+// Метода проверки наличия контактов в HomePage
         public void ChekingContract()
         {
             if (IsContractIn() != true)
@@ -131,6 +135,26 @@ namespace WebAddressbookTests
             return IsElementPresent(By.Name("selected[]"));
         }
 
+// Методы сравнения групп
+        public List<ContactData> GetContactList()
+        {
+            List<ContactData> contacts = new List<ContactData>();
+
+            manager.Navigator.GoToHomePage();
+            int index = 1;
+            ICollection<IWebElement> elements = driver.FindElements(By.Name("entry"));
+            foreach (IWebElement element in elements)
+            {
+                IWebElement lastName = driver.FindElement(By.XPath("(//tr[@name='entry']["+ index +"]/td[2])"));
+                IWebElement firstName = driver.FindElement(By.XPath("(//tr[@name='entry'][" + index +"]/td[3])"));
+
+                contacts.Add(new ContactData(firstName.Text, lastName.Text));
+                index++;
+            }
+            return contacts ;
+        }
+
+//Работа с текстом
         private string CloseAlertAndGetItsText()
         {
             try
