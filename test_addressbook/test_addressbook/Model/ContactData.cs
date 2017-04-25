@@ -11,7 +11,7 @@ namespace WebAddressbookTests
         private string firstname;
         private string lastname;
 
-        public ContactData(string firstname, string lastname)
+        public ContactData(string lastname, string firstname)
         {
             this.firstname = firstname;
             this.lastname = lastname;
@@ -69,7 +69,11 @@ namespace WebAddressbookTests
             {
                 return 1;
             }
-            return Firstname.CompareTo(other.Firstname) + LastName.CompareTo(other.LastName);
+            if (LastName.Equals(other.LastName))
+            {
+                return Firstname.CompareTo(other.Firstname);
+            }
+            return LastName.CompareTo(other.LastName);
         }
     }
 }

@@ -32,7 +32,7 @@ namespace WebAddressbookTests
         public ContactHelper ConModify(int index, ContactData newContact)
         {
             SelectContact(index);
-            EditNewContract(1);
+            EditNewContract();
             FillContractForm(newContact);
             SubmitNewContractModify();
             ReturnToHomePage();
@@ -48,9 +48,9 @@ namespace WebAddressbookTests
         }
 
 // Методы манипуляции с контактами
-        public ContactHelper EditNewContract(int index)
+        public ContactHelper EditNewContract()
         {
-            driver.FindElement(By.XPath("(//img[@title='Edit'])[" + index + "]")).Click();
+            driver.FindElement(By.XPath("(//img[@title='Edit'])[ 1 ]")).Click();
             return this;
         }
 
@@ -147,8 +147,10 @@ namespace WebAddressbookTests
             {
                 IWebElement lastName = driver.FindElement(By.XPath("(//tr[@name='entry']["+ index +"]/td[2])"));
                 IWebElement firstName = driver.FindElement(By.XPath("(//tr[@name='entry'][" + index +"]/td[3])"));
+                //IWebElement lastName = driver.FindElements(By.TagName("td"))[1];
+                //IWebElement firstName = driver.FindElements(By.TagName("td"))[2];
 
-                contacts.Add(new ContactData(firstName.Text, lastName.Text));
+                contacts.Add(new ContactData(lastName.Text, firstName.Text));
                 index++;
             }
             return contacts ;
