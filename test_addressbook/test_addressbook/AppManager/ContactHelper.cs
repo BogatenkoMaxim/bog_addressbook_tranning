@@ -57,6 +57,7 @@ namespace WebAddressbookTests
         public ContactHelper SubmitNewContractModify()
         {
             driver.FindElement(By.Name("update")).Click();
+            contactCache = null;
             return this;
         }
 
@@ -64,6 +65,7 @@ namespace WebAddressbookTests
         public ContactHelper SubmitNewContract()
         {
             driver.FindElement(By.Name("submit")).Click();
+            contactCache = null;
             return this;
         }
 
@@ -112,6 +114,7 @@ namespace WebAddressbookTests
         {
             driver.FindElement(By.XPath("//input[@value='Delete']")).Click();
             Assert.IsTrue(Regex.IsMatch(CloseAlertAndGetItsText(), "^Delete 1 addresses[\\s\\S]$"));
+            contactCache = null;
             return this;
         }
 
@@ -135,25 +138,34 @@ namespace WebAddressbookTests
             return IsElementPresent(By.Name("selected[]"));
         }
 
+// Кэширование
+        private List<ContactData> contactCache = null;
+
 // Методы сравнения групп
         public List<ContactData> GetContactList()
         {
-            List<ContactData> contacts = new List<ContactData>();
-
-            manager.Navigator.GoToHomePage();
-            int index = 1;
-            ICollection<IWebElement> elements = driver.FindElements(By.Name("entry"));
-            foreach (IWebElement element in elements)
+            if(contactCache == null)
             {
-                IWebElement lastName = driver.FindElement(By.XPath("(//tr[@name='entry']["+ index +"]/td[2])"));
-                IWebElement firstName = driver.FindElement(By.XPath("(//tr[@name='entry'][" + index +"]/td[3])"));
-                //IWebElement lastName = driver.FindElements(By.TagName("td"))[1];
-                //IWebElement firstName = driver.FindElements(By.TagName("td"))[2];
+                contactCache = new List<ContactData>();
+                manager.Navigator.GoToHomePage();
+                ICollection<IWebElement> elements = driver.FindElements(By.Name("entry"));
+                foreach (IWebElement element in elements)
+                {
+                    IWebElement lastName = element.FindElements(By.TagName("td"))[1];
+                    IWebElement firstName = element.FindElements(By.TagName("td"))[2];
 
-                contacts.Add(new ContactData(lastName.Text, firstName.Text));
-                index++;
+                    contactCache.Add(new ContactData(lastName.Text, firstName.Text)
+                    {
+                        Id = element.FindElement(By.TagName("input")).GetAttribute("Value")
+                    });
+                }
             }
-            return contacts ;
+            return new List<ContactData>(contactCache);
+        }
+
+        public int GetContactCount()
+        {
+            return driver.FindElements(By.Name("entry")).Count;
         }
 
 //Работа с текстом

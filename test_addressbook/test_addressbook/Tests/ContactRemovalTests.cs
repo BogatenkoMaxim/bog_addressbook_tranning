@@ -16,11 +16,19 @@ namespace WebAddressbookTests
             List<ContactData> oldContacts = app.Contacts.GetContactList();
 
             app.Contacts.ChekingContract();
-            app.Contacts.ConRemove(1);
+            app.Contacts.ConRemove(0);
+
+            Assert.AreEqual(oldContacts.Count - 1, app.Contacts.GetContactCount());
 
             List<ContactData> newContacts = app.Contacts.GetContactList();
+            ContactData beRemoved = oldContacts[0];
             oldContacts.RemoveAt(0);
             Assert.AreEqual(oldContacts, newContacts);
+
+            foreach(ContactData contact in newContacts)
+            {
+                Assert.AreNotEqual(contact.Id, beRemoved.Id);
+            }
         }
     }
 }
