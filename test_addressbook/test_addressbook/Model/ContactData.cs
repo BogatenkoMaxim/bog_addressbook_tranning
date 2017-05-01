@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace WebAddressbookTests
 {
@@ -48,7 +49,7 @@ namespace WebAddressbookTests
             {
                 return "";
             }
-            return phone.Replace(" ", "").Replace("-", "").Replace("(", "").Replace(")", "") + "\r\n";
+            return Regex.Replace(phone, "[ -()]", "") + "\r\n";
         }
 
 // Метода сравнения и сортировки
@@ -72,7 +73,7 @@ namespace WebAddressbookTests
 
         public override string ToString()
         {
-            return Firstname + LastName;
+            return "Имя = " + Firstname + "\nФамилия = " + LastName;
         }
 
         public int CompareTo(ContactData other)

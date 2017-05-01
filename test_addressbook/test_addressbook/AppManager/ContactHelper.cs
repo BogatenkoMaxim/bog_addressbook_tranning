@@ -9,6 +9,7 @@ using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
 
 
+
 namespace WebAddressbookTests
 {
     public class ContactHelper : HelperBase
@@ -192,7 +193,7 @@ namespace WebAddressbookTests
         }
 
 // Чтение информации с таблицы или формы
-        internal ContactData GetContactInformationFromTable(int index)
+        public ContactData GetContactInformationFromTable(int index)
         {
             manager.Navigator.GoToHomePage();
             IList<IWebElement> cells = driver.FindElements(By.Name("entry"))[index]
@@ -209,7 +210,7 @@ namespace WebAddressbookTests
             };
         }
 
-        internal ContactData GetContactInformationFromEditForm(int index)
+        public ContactData GetContactInformationFromEditForm(int index)
         {
             manager.Navigator.GoToHomePage();
             NewInitContactModification(index);
@@ -236,6 +237,16 @@ namespace WebAddressbookTests
             driver.FindElements(By.Name("entry"))[index]
                 .FindElements(By.TagName("td"))[7]
                 .FindElement(By.TagName("a")).Click();
+        }
+
+// Число строк в контактах
+        public int GetNumberOfResults()
+        {
+            manager.Navigator.GoToHomePage();
+            string text = driver.FindElement(By.TagName("label")).Text;
+            Match m = new Regex(@"\d+").Match(text);
+            return Int32.Parse(m.Value);
+
         }
 
     }
