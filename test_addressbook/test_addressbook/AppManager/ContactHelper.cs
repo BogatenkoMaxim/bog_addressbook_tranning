@@ -15,7 +15,7 @@ namespace WebAddressbookTests
     {
         private bool acceptNextAlert = true;
 
-// Выполняемые действия над контактами
+        // Выполняемые действия над контактами
         public ContactHelper(ApplicationManager manager) : base(manager)
         {
         }
@@ -190,5 +190,53 @@ namespace WebAddressbookTests
                 acceptNextAlert = true;
             }
         }
+
+// Чтение информации с таблицы или формы
+        internal ContactData GetContactInformationFromTable(int index)
+        {
+            manager.Navigator.GoToHomePage();
+            IList<IWebElement> cells = driver.FindElements(By.Name("entry"))[index]
+                .FindElements(By.TagName("td"));
+            string lastName = cells[1].Text;
+            string firstName = cells[2].Text;
+            string address = cells[3].Text;
+            string allPhones = cells[5].Text;
+
+            return new ContactData(lastName, firstName)
+            {
+                Address = address,
+                AllPhones = allPhones
+            };
+        }
+
+        internal ContactData GetContactInformationFromEditForm(int index)
+        {
+            manager.Navigator.GoToHomePage();
+            NewInitContactModification(index);
+            string firstName = driver.FindElement(By.Name("firstname")).GetAttribute("Value");
+            string lastName = driver.FindElement(By.Name("lastname")).GetAttribute("Value");
+            //string address = driver.FindElement(By.Name("address")).GetAttribute("Value");
+            string address = driver.FindElement(By.Name("address")).Text;
+            string homePhone = driver.FindElement(By.Name("home")).GetAttribute("Value");
+            string mobilePhone = driver.FindElement(By.Name("mobile")).GetAttribute("Value");
+            string workPhone = driver.FindElement(By.Name("work")).GetAttribute("Value");
+
+
+            return new ContactData(lastName, firstName)
+            {
+                Address = address,
+                HomePhone = homePhone,
+                MobilePhone = mobilePhone,
+                WorkPhone = workPhone,
+            };
+        }
+
+        public void NewInitContactModification(int index)
+        {
+            driver.FindElements(By.Name("entry"))[index]
+                .FindElements(By.TagName("td"))[7]
+                .FindElement(By.TagName("a")).Click();
+        }
+
     }
 }
