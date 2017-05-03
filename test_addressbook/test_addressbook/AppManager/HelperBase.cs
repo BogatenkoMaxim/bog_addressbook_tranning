@@ -40,6 +40,7 @@ namespace WebAddressbookTests
         {
             try
             {
+
                 driver.FindElement(by);
                 return true;
             }

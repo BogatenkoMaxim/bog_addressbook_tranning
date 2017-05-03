@@ -27,5 +27,17 @@ namespace WebAddressbookTests
         {
             System.Console.Out.Write(app.Contacts.GetNumberOfResults());
         }
+
+        [Test]
+        public void TestContactInformationDetails()
+        {
+            List<string> fromEdit = app.Contacts.GetContactInformationFromEditFormFull(0);
+            List<string> fromDetails = app.Contacts.GetContactInformationFromDetails(0);
+
+            for (int i = 0; i < fromEdit.Count; i++)
+            {
+                Assert.AreEqual(fromEdit[i], fromDetails[i]);
+            }
+        }
     }
 }
