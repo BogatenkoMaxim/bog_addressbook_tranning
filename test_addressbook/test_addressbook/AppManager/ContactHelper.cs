@@ -232,16 +232,15 @@ namespace WebAddressbookTests
             };
         }
 
-        public List<string> GetContactInformationFromDetails(int index)
+        public string GetContactInformationFromDetails(int index)
         {
             manager.Navigator.GoToHomePage();
             driver.FindElements(By.Name("entry"))[index].FindElement(By.XPath("//img[@title='Details']")).Click();
-            var content = driver.FindElement(By.Id("content")).Text.Replace("Homepage:", "");
-            //content = content.Replace("Homepage:", "");
-            return new List<string>(content.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries));
+            string content = driver.FindElement(By.Id("content")).Text.Replace("\r\n", "").Replace(" ", "");
+            return content;
         }
 
-        public List<string> GetContactInformationFromEditFormFull(int index)
+        public string GetContactInformationFromEditFormFull(int index)
         {
             manager.Navigator.GoToHomePage();
             NewInitContactModification(index);
@@ -252,29 +251,29 @@ namespace WebAddressbookTests
             string company = driver.FindElement(By.Name("company")).GetAttribute("Value");
             string title = driver.FindElement(By.Name("title")).GetAttribute("Value");
             string address = driver.FindElement(By.Name("address")).Text;
-            string homePhone = "H: " + driver.FindElement(By.Name("home")).GetAttribute("Value");
-            string mobilePhone = "M: " + driver.FindElement(By.Name("mobile")).GetAttribute("Value");
-            string workPhone = "W: " + driver.FindElement(By.Name("work")).GetAttribute("Value");
-            string fax = "F: " + driver.FindElement(By.Name("fax")).GetAttribute("Value");
+
+            string homePhone = driver.FindElement(By.Name("home")).GetAttribute("Value");
+            string trueHomePhone = string.IsNullOrEmpty(homePhone) ? string.Empty : $"H:{homePhone}";
+
+            string mobilePhone = driver.FindElement(By.Name("mobile")).GetAttribute("Value");
+            string trueMobilePhone = string.IsNullOrEmpty(mobilePhone) ? string.Empty : $"M:{mobilePhone}";
+
+            string workPhone = driver.FindElement(By.Name("work")).GetAttribute("Value");
+            string trueWorkPhone = string.IsNullOrEmpty(workPhone) ? string.Empty : $"W:{workPhone}";
+
+            string fax = driver.FindElement(By.Name("fax")).GetAttribute("Value");
+            string trueFax = string.IsNullOrEmpty(fax) ? string.Empty : $"F:{fax}";
+
             string email = driver.FindElement(By.Name("email")).GetAttribute("Value");
             string email2 = driver.FindElement(By.Name("email2")).GetAttribute("Value");
             string email3 = driver.FindElement(By.Name("email3")).GetAttribute("Value");
+
             string homePage = driver.FindElement(By.Name("homepage")).GetAttribute("Value");
+            string trueHomePage = string.IsNullOrEmpty(homePage) ? string.Empty : $"Homepage:{homePage}";
 
-            string fml = firstName + ' ' + middleName + ' ' + lastName;
-
-            List<string> list = new List<string> { fml, nickName, company, title,
-                address, homePhone, mobilePhone, workPhone, fax, email, email2, email3, homePage};
-            List<string> newList = new List<string>();
-            foreach (string element in list)
-            {
-                if (element != "")
-                {
-                    newList.Add(element);
-                }
-            }
-
-            return newList;
+            string sumEdit = (firstName + middleName + lastName + nickName + company + title + address + trueHomePhone
+                + trueMobilePhone + trueWorkPhone + trueFax + email + email2 + email3 + trueHomePage).Replace(" ", "");
+            return sumEdit;
         }
 
         public void NewInitContactModification(int index)
