@@ -124,7 +124,7 @@ namespace WebAddressbookTests
             using (AddressBookDB db = new AddressBookDB())
             {
 
-                List<ContactData> oldContacts = (from g in db.Contacts select g).ToList();
+                List<ContactData> oldContacts = (from c in db.Contacts select c).ToList();
                 List<ContactData> trustContactList = new List<ContactData>();
                 foreach (ContactData con in oldContacts)
                 {
@@ -135,6 +135,15 @@ namespace WebAddressbookTests
                 }
                 return trustContactList;
 
+            }
+        }
+
+        public static List<ContactData> GetAll2()
+        {
+            using (AddressBookDB db = new AddressBookDB())
+            {
+                return (from c in db.Contacts.Where(x => x.Deprecated == "0000-00-00 00:00:00")
+                        select c).ToList();
             }
         }
     }

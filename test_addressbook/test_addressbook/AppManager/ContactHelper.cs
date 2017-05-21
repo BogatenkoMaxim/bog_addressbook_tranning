@@ -16,7 +16,7 @@ namespace WebAddressbookTests
     {
         private bool acceptNextAlert = true;
 
-        // Выполняемые действия над контактами
+ // Выполняемые действия над контактами
         public ContactHelper(ApplicationManager manager) : base(manager)
         {
         }
@@ -46,6 +46,26 @@ namespace WebAddressbookTests
             RemoveContact();
             ReturnToHomePage();
             return this;
+        }
+
+        public void AddContactToGroup(ContactData contact, GroupData group)
+        {
+            ClearGroupFilter();
+            SelectContact(contact.Id);
+            SelectGroupToAdd(group.Name);
+            CommitAddingContactToGroup();
+            new WebDriverWait(driver, TimeSpan.FromSeconds(10))
+                .Until(d => d.FindElements(By.CssSelector("div.msgbox")).Count > 0);
+        }
+
+        public void DeleteContactToGroup(ContactData contact, GroupData group)
+        {
+            ClearGroupFilter();
+            SelectGroupFilter();
+            SelectContact(contact.Id);
+            CommitDeleteContactToGroup();
+            new WebDriverWait(driver, TimeSpan.FromSeconds(10))
+               .Until(d => d.FindElements(By.CssSelector("div.msgbox")).Count > 0);
         }
 
 // Методы манипуляции с контактами
@@ -105,6 +125,11 @@ namespace WebAddressbookTests
             return this;
         }
 
+        private void SelectContact(string id)
+        {
+            driver.FindElement(By.Id(id)).Click();
+        }
+
         public ContactHelper InitNewContact()
         {
             driver.FindElement(By.LinkText("add new")).Click();
@@ -123,6 +148,33 @@ namespace WebAddressbookTests
         {
             driver.FindElement(By.LinkText("home")).Click();
         }
+
+        private void CommitAddingContactToGroup()
+        {
+            driver.FindElement(By.Name("add")).Click();
+        }
+
+        private void SelectGroupToAdd(string name)
+        {
+            new SelectElement(driver.FindElement(By.Name("to_group"))).SelectByText(name);
+        }
+
+        private void ClearGroupFilter()
+        {
+            new SelectElement(driver.FindElement(By.Name("group"))).SelectByText("[all]");
+        }
+
+        private void SelectGroupFilter()
+        {
+            new SelectElement(driver.FindElement(By.Name("group")))
+                .SelectByText(GroupData.GetAll()[0].Name);
+        }
+
+        private void CommitDeleteContactToGroup()
+        {
+            driver.FindElement(By.Name("remove")).Click();
+        }
+
 
 // Метода проверки наличия контактов в HomePage
         public void ChekingContract()
