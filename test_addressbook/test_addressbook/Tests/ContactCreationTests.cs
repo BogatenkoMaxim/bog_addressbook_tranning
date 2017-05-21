@@ -39,17 +39,31 @@ namespace WebAddressbookTests
         [Test, TestCaseSource("WriteContactsToJsonFile")]
         public void ContactCreationTest(ContactData contact)
         {
-            List<ContactData> oldContacts = app.Contacts.GetContactList();
+            List<ContactData> trustContactList = ContactData.GetAll();
 
             app.Contacts.ConCreate(contact);
 
-            Assert.AreEqual(oldContacts.Count + 1, app.Contacts.GetContactCount());
+            Assert.AreEqual(trustContactList.Count + 1, app.Contacts.GetContactCount());
 
-            List<ContactData> newContacts = app.Contacts.GetContactList();
-            oldContacts.Add(contact);
-            oldContacts.Sort();
+            List<ContactData> newContacts = ContactData.GetAll();
+            trustContactList.Add(contact);
+            trustContactList.Sort();
             newContacts.Sort();
-            Assert.AreEqual(oldContacts, newContacts);
+            Assert.AreEqual(trustContactList, newContacts);
+        }
+
+        [Test]
+        public void TestDBConnectivityContacts()
+        {
+            DateTime start = DateTime.Now;
+            List<ContactData> fromUi = app.Contacts.GetContactList();
+            DateTime end = DateTime.Now;
+            System.Console.Out.WriteLine(end.Subtract(start));
+
+            start = DateTime.Now;
+            List<ContactData> fromDb = ContactData.GetAll();
+            end = DateTime.Now;
+            System.Console.Out.WriteLine(end.Subtract(start));
         }
     }
 }

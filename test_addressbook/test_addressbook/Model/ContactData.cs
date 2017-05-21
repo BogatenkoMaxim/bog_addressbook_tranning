@@ -4,17 +4,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
+using LinqToDB.Mapping;
 
 namespace WebAddressbookTests
 {
+    [Table(Name = "addressbook")]
+
     public class ContactData : IEquatable<ContactData>, IComparable<ContactData>
     {
         private string allPhones;
+        private string deprecated;
 
         public ContactData()
         {
 
         }
+
 
         public ContactData(string lastname, string firstname)
         {
@@ -22,8 +27,28 @@ namespace WebAddressbookTests
             LastName = lastname;
         }
 
+        [Column(Name = "firstname")]
         public string Firstname { get; set; }
+
+        [Column(Name = "lastname")]
         public string LastName { get; set; }
+
+        [Column(Name = "id"), PrimaryKey, Identity]
+        public string Id { get; set; }
+
+        [Column(Name = "deprecated")]
+        public string Deprecated
+        {
+            get
+            {
+                return deprecated;
+            }
+            set
+            {
+                deprecated = value;
+            }
+        }
+   
         public string Address { get; set; }
         public string HomePhone { get; set; }
         public string MobilePhone { get; set; }
@@ -94,6 +119,23 @@ namespace WebAddressbookTests
             return LastName.CompareTo(other.LastName);
         }
 
-        public string Id { get; set; }
+        public static List<ContactData> GetAll()
+        {
+            using (AddressBookDB db = new AddressBookDB())
+            {
+
+                List<ContactData> oldContacts = (from g in db.Contacts select g).ToList();
+                List<ContactData> trustContactList = new List<ContactData>();
+                foreach (ContactData con in oldContacts)
+                {
+                    if (con.Deprecated == DateTime.MinValue.ToString())
+                    {
+                        trustContactList.Add(con);
+                    }
+                }
+                return trustContactList;
+
+            }
+        }
     }
 }
