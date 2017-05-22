@@ -7,7 +7,7 @@ using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
-
+using System.Linq;
 
 
 namespace WebAddressbookTests
@@ -68,6 +68,8 @@ namespace WebAddressbookTests
 
         public void AddContactToGroup(ContactData contact, GroupData group)
         {
+            manager.Navigator.GoToHomePage();
+
             ClearGroupFilter();
             SelectContact(contact.Id);
             SelectGroupToAdd(group.Name);
@@ -78,6 +80,8 @@ namespace WebAddressbookTests
 
         public void DeleteContactToGroup(ContactData contact, GroupData group)
         {
+            manager.Navigator.GoToHomePage();
+
             ClearGroupFilter();
             SelectGroupFilter();
             SelectContact(contact.Id);
@@ -214,6 +218,7 @@ namespace WebAddressbookTests
 // Метода проверки наличия контактов в HomePage
         public void ChekingContract()
         {
+            manager.Navigator.GoToHomePage();
             if (IsContractIn() != true)
             {
                 ContactData forModify = new ContactData("Maxim", "Bogatenko");
@@ -224,6 +229,15 @@ namespace WebAddressbookTests
         private bool IsContractIn()
         {
             return IsElementPresent(By.Name("selected[]"));
+        }
+
+        public void ChekingRelation(List<ContactData> oldList)
+        {
+            if (oldList.Count() == ContactData.GetAll2().Count)
+            {
+                ContactData forModify = new ContactData("Satana", "Astana");
+                manager.Contacts.ConCreate(forModify);
+            }
         }
 
 // Кэширование

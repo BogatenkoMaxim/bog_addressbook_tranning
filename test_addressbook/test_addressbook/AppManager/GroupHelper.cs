@@ -136,6 +136,7 @@ namespace WebAddressbookTests
 // Метода проверки наличия группы в GroupPage
         public void ChekingGroup()
         {
+            manager.Navigator.GoToGroupPage();
             if (IsGroupIn() != true)
             {
                 GroupData forModify = new GroupData("group3");

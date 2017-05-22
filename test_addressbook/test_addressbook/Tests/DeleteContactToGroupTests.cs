@@ -12,9 +12,20 @@ namespace WebAddressbookTests
         [Test]
         public void TestDeleteContactToGroup()
         {
+            app.Groups.ChekingGroup();
+            app.Contacts.ChekingContract();
+
             GroupData group = GroupData.GetAll()[0];
             List<ContactData> oldList = group.GetContacts();
-            ContactData contact = oldList.First();
+            ContactData contact = ContactData.GetAll().First();
+            if (oldList.Count == 0)
+            {
+                app.Contacts.AddContactToGroup(contact, group);
+            }
+            else
+            {
+                contact = oldList.First();
+            }
 
             app.Contacts.DeleteContactToGroup(contact, group);
 
