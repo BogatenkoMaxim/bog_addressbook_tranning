@@ -17,17 +17,17 @@ namespace WebAddressbookTests
         {
             ContactData newContact = new ContactData("Klavdian", "Cepkins");
 
-            List<ContactData> oldContacts = app.Contacts.GetContactList();
+            List<ContactData> oldContacts = ContactData.GetAll();
             ContactData oldData = oldContacts[0];
 
             app.Contacts.ChekingContract();
-            app.Contacts.ConModify(0, newContact);
+            app.Contacts.ConModify(oldData, newContact);
 
             Assert.AreEqual(oldContacts.Count, app.Contacts.GetContactCount());
 
-            List<ContactData> newContacts = app.Contacts.GetContactList();
-            oldContacts[0].Firstname = newContact.Firstname;
-            oldContacts[0].LastName = newContact.LastName;
+            List<ContactData> newContacts = ContactData.GetAll();
+            oldData.Firstname = newContact.Firstname;
+            oldData.LastName = newContact.LastName;
             oldContacts.Sort();
             newContacts.Sort();
             Assert.AreEqual(oldContacts, newContacts);

@@ -40,9 +40,27 @@ namespace WebAddressbookTests
             return this;
         }
 
+        public ContactHelper ConModify(ContactData contact, ContactData newContact)
+        {
+            SelectContact(contact.Id);
+            EditNewContract(contact.Id);
+            FillContractForm(newContact);
+            SubmitNewContractModify();
+            ReturnToHomePage();
+            return this;
+        }
+
         public ContactHelper ConRemove(int index)
         {
             SelectContact(index);
+            RemoveContact();
+            ReturnToHomePage();
+            return this;
+        }
+
+        public ContactHelper ConRemove(ContactData contact)
+        {
+            SelectContact(contact.Id);
             RemoveContact();
             ReturnToHomePage();
             return this;
@@ -72,6 +90,23 @@ namespace WebAddressbookTests
         public ContactHelper EditNewContract()
         {
             driver.FindElement(By.XPath("(//img[@title='Edit'])[ 1 ]")).Click();
+            return this;
+        }
+
+        public ContactHelper EditNewContract(string id)
+        {
+            ICollection<IWebElement> elements = driver.FindElements(By.Name("entry"));
+            foreach (IWebElement element in elements)
+            {
+                string p = element.FindElement(By.Name("selected[]"))
+                    .GetAttribute("Value");
+                 if (p == id)
+                {
+                    //element.FindElement(By.XPath("(//input[@name='selected[]' and @value='" + id + "'])")).Click();
+                    element.FindElement(By.XPath("(.//img[@title='Edit'])")).Click();
+                    break;
+                }
+            }
             return this;
         }
 
