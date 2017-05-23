@@ -17,10 +17,11 @@ namespace WebAddressbookTests
         {
             ContactData newContact = new ContactData("Klavdian", "Cepkins");
 
+            app.Contacts.ChekingContract();
+
             List<ContactData> oldContacts = ContactData.GetAll();
             ContactData oldData = oldContacts[0];
 
-            app.Contacts.ChekingContract();
             app.Contacts.ConModify(oldData, newContact);
 
             Assert.AreEqual(oldContacts.Count, app.Contacts.GetContactCount());
